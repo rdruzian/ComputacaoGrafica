@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <title>Babylon.js sample code</title>
+
+    <!-- Babylon.js -->
+    <script src="https://code.jquery.com/pep/0.4.2/pep.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.6.2/dat.gui.min.js"></script>
+    <script src="https://preview.babylonjs.com/ammo.js"></script>
+    <script src="https://preview.babylonjs.com/cannon.js"></script>
+    <script src="https://preview.babylonjs.com/Oimo.js"></script>
+    <script src="https://preview.babylonjs.com/earcut.min.js"></script>
+    <script src="https://preview.babylonjs.com/babylon.js"></script>
+    <script src="https://preview.babylonjs.com/materialsLibrary/babylonjs.materials.min.js"></script>
+    <script src="https://preview.babylonjs.com/proceduralTexturesLibrary/babylonjs.proceduralTextures.min.js"></script>
+    <script src="https://preview.babylonjs.com/postProcessesLibrary/babylonjs.postProcess.min.js"></script>
+    <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.js"></script>
+    <script src="https://preview.babylonjs.com/serializers/babylonjs.serializers.min.js"></script>
+    <script src="https://preview.babylonjs.com/gui/babylon.gui.min.js"></script>
+    <script src="https://preview.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>
+
+    <style>
+        html,
+        body {
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #renderCanvas {
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="renderCanvas"></canvas>
+    <script>
+
+        var canvas = document.getElementById("renderCanvas");
+
+        var engine = null;
+        var scene = null;
+        var sceneToRender = null;
+        var createDefaultEngine = function () { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true, disableWebGL2Support: false }); };
+        var scene;
+        var notes = new Map();
+
+        var createScene = function () {
+            scene = new BABYLON.Scene(engine);
+
+            /**** Set camera and light *****/
+            const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 10, new BABYLON.Vector3(0, 0, 0));
+            camera.attachControl(canvas, true);
+            const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
+
+            const ground = BABYLON.MeshBuilder.CreateGround("ground", { width: 10, height: 10 });
+            ground.isPickable = false;
+
+            managerEvents();
+
+            noteFa = new Note("fa", "assets/fa.wav");
+            noteFa.box.position.y = 0.5;
+
+            noteSol = new Note("sol", "assets/sol.wav");
+            noteSol.box.position.y = 0.5;
+            noteSol.box.position.x = 1.5;
+
+            noteLa = new Note("la", "assets/la.wav");
+            noteLa.box.position.y = 0.5;
+            noteLa.box.position.x = 3;
+
+            noteMi = new Note("mi", "assets/mi.wav");
+            noteMi.box.position.y = 0.5;
+            noteMi.box.position.x = -1.5;
+
+            noteRe = new Note("re", "assets/re.wav");
+            noteRe.box.position.y = 0.5;
+            noteRe.box.position.x = -3;
+
+            noteSi = new Note("si", "assets/si.wav");
+            noteSi.box.position.y = 0.5;
+            noteSi.box.position.x = 4.5;
+
+            noteDo = new Note("do", "assets/do.wav");
+            noteDo.box.position.y = 0.5;
+            noteDo.box.position.x = -4.5;
+
+            notes.set("do",noteDo);
+            notes.set("re",noteRe);
+            notes.set("mi",noteMi);
+            notes.set("fa",noteFa);
+            notes.set("sol",noteSol);
+            notes.set("la",noteLa);
+            notes.set("si",noteSi);
+
+            return scene;
+        };
+
+        function managerEvents() {
+
+            scene.onPointerDown = function (evt, pickResults) {
+                if (pickResults.hit) {
+                    notes.get(pickResults.pickedMesh.name).play();
+                }
+            }
+
+        }
+
+        initFunction = async function () {
+            var asyncEngineCreation = async function () {
+                try {
+                    return createDefaultEngine();
+                } catch (e) {
+                    console.log("the available createEngine function failed. Creating the default engine instead");
+                    return createDefaultEngine();
+                }
+            }
+
+            engine = await asyncEngineCreation();
+            if (!engine) throw 'engine should not be null.';
+            scene = createScene();
+        };
+        initFunction().then(() => {
+            sceneToRender = scene
+            engine.runRenderLoop(function () {
+                if (sceneToRender && sceneToRender.activeCamera) {
+                    sceneToRender.render();
+                }
+            });
+        });
+
+        // Resize
+        window.addEventListener("resize", function () {
+            engine.resize();
+        });
+
+
+        class Note {
+            constructor(noteName, noteUrl) {
+                this.ySlide = new BABYLON.Animation("ySlide", "position.y", 100, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                let keyFrames = [];
+
+                keyFrames.push({
+                    frame: 0,
+                    value: 0.5
+                });
+
+                keyFrames.push({
+                    frame: 5,
+                    value: 0.0
+                });
+
+                keyFrames.push({
+                    frame: 10,
+                    value: 0.5
+                });
+
+                this.ySlide.setKeys(keyFrames);
+
+                //Rotation Animation
+                var yRot = new BABYLON.Animation("yRot", "rotation.y", frameRate, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+
+                var keyFramesR = []; 
+
+                keyFramesR.push({
+                    frame: 0,
+                    value: 0
+                });
+
+                keyFramesR.push({
+                    frame: frameRate,
+                    value: Math.PI
+                });
+
+                keyFramesR.push({
+                    frame: 2 * frameRate,
+                    value: 2 * Math.PI
+                });
+
+
+                yRot.setKeys(keyFramesR);
+
+                // Load the sound, give it time to load and play it every 3 seconds
+                this.note = new BABYLON.Sound(noteName, noteUrl, scene);
+                this.box = BABYLON.MeshBuilder.CreateBox(noteName, {});
+            }
+
+            play() {
+                this.note.play();
+                scene.beginDirectAnimation(this.box, [this.ySlide, this.yRot], 0, 10, true);
+            }
+        }
+    </script>
+</body>
+
+</html>
