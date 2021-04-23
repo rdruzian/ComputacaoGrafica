@@ -57,14 +57,19 @@
     //texture
     const dado = new BABYLON.StandardMaterial("dado");
     dado.diffuseTexture = new BABYLON.Texture("http://localhost:5555/Atividade_3/textures/dice.jpg", scene);
-    dado.diffuseTexture.uScale = 0.25;
-    dado.diffuseTexture.vScale = 0.25;
-    dado.diffuseTexture.uOffset = 0.5;
-    dado.diffuseTexture.vOffset = 0.5;
+    
+    const faceUv= [];
+    //  (lower left x, lower left y, upper right x, upper right y)
+    faceUv[1] = new BABYLON.Vector4(0.75, 0.75, 0.5, 0.5); // 6
+    faceUv[5] = new BABYLON.Vector4(0.5, 0.5, 0.25, 0.25); //2
+    faceUv[2] = new BABYLON.Vector4(1, 0.5, 0.75, 0.25); //4
+    faceUv[3] = new BABYLON.Vector4(0.75, 0.5, 0.5, 0.25); //3
+    faceUv[0] = new BABYLON.Vector4(0, 0.5, 0.25, 0.25); //1
+    faceUv[4] = new BABYLON.Vector4(0.75, 0, 0.5, 0.25); //5
 
 
     /**** World Objects *****/
-    const box = BABYLON.MeshBuilder.CreateBox("dado", {}, scene);
+    const box = BABYLON.MeshBuilder.CreateBox("dado", {faceUV: faceUv, wrap: true});
     box.position.y = 0.5;
     box.material = dado;
 
