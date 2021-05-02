@@ -95,7 +95,7 @@
             const largeGroundMat = new BABYLON.StandardMaterial("largeGroundMat");
             largeGroundMat.diffuseTexture = new BABYLON.Texture("https://assets.babylonjs.com/environments/valleygrass.png");
             
-            const largeGround = BABYLON.MeshBuilder.CreateGroundFromHeightMap("largeGround", "https://assets.babylonjs.com/environments/villageheightmap.png", {width:150, height:150, subdivisions: 20, minHeight:0, maxHeight: 10});
+            const largeGround = BABYLON.MeshBuilder.CreateGroundFromHeightMap("largeGround", "https://assets.babylonjs.com/environments/villageheightmap.png", {width:150, height:150, subdivisions: 3, minHeight:0, maxHeight: 10});
             largeGround.material = largeGroundMat;
         
             // Keyboard events
@@ -107,8 +107,16 @@
             scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyUpTrigger, function (evt) {
                 inputMap[evt.sourceEvent.key] = evt.sourceEvent.type == "keydown";
             }));
-        
-        
+
+            // Adicionando gravidade
+            const assumedFramesPerSecond = 60;
+            const earthGravity = -9.81;
+            scene.gravity = new BABYLON.Vector3(0, earthGravity / assumedFramesPerSecond, 0);
+
+            // Adicionado e aplicado colisão na câmera e no chão
+            scene.collisionsEnabled = true;
+            largeGround.checkCollisions = true;
+
             // Load hero character
             BABYLON.SceneLoader.ImportMesh("", "https://assets.babylonjs.com/meshes/", "HVGirl.glb", scene, function (newMeshes, particleSystems, skeletons, animationGroups) {
                 var hero = newMeshes[0];
@@ -130,8 +138,9 @@
                 const walkBackAnim = scene.getAnimationGroupByName("WalkingBack");
                 const idleAnim = scene.getAnimationGroupByName("Idle");
                 const sambaAnim = scene.getAnimationGroupByName("Samba");
-        
-                
+
+                hero.collisionsEnabled = true;
+                hero.checkCollisions = true;
         
                 //Rendering loop (executed for everyframe)
                 scene.onBeforeRenderObservable.add(() => {
