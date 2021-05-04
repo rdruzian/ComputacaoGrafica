@@ -72,7 +72,7 @@
             light2.position = new BABYLON.Vector3(0, 5, 5);
         
             // Skybox
-            var skybox = BABYLON.Mesh.CreateCylinder("skyBox", { height: 100, diameterTop: 100, diameterBottom: 100 }, scene);
+            var skybox = BABYLON.MeshBuilder.CreateBox("skyBox", {size:1000}, scene);
             var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
             skyboxMaterial.backFaceCulling = false;
             skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("textures/skybox", scene);
@@ -94,6 +94,16 @@
             // Ground
             const largeGroundMat = new BABYLON.StandardMaterial("largeGroundMat");
             largeGroundMat.diffuseTexture = new BABYLON.Texture("https://assets.babylonjs.com/environments/valleygrass.png");
+
+            const wireMat = new BABYLON.StandardMaterial("wireMat");
+            wireMat.wireframe = true;
+<!--            wireMat.alpha = 0;-->
+
+            const hitBox = BABYLON.MeshBuilder.CreateBox("ground", {width: 150, height: 20, depth: 150});
+            hitBox.material = wireMat;
+            hitBox.position.x = 0;
+            hitBox.position.y = 15;
+            hitBox.position.z = 0;
             
             const largeGround = BABYLON.MeshBuilder.CreateGroundFromHeightMap("largeGround", "https://assets.babylonjs.com/environments/villageheightmap.png", {width:150, height:150, subdivisions: 3, minHeight:0, maxHeight: 10});
             largeGround.material = largeGroundMat;
@@ -107,11 +117,6 @@
             scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyUpTrigger, function (evt) {
                 inputMap[evt.sourceEvent.key] = evt.sourceEvent.type == "keydown";
             }));
-
-            // Adicionando gravidade
-            const assumedFramesPerSecond = 60;
-            const earthGravity = -9.81;
-            scene.gravity = new BABYLON.Vector3(0, earthGravity / assumedFramesPerSecond, 0);
 
             // Adicionado e aplicado colisão na câmera e no chão
             scene.collisionsEnabled = true;
@@ -128,7 +133,7 @@
                 camera1.target = hero;
         
                 //Hero character variables 
-                var heroSpeed = 0.03;
+                var heroSpeed = 0.3;
                 var heroSpeedBackwards = 0.01;
                 var heroRotationSpeed = 0.1;
         
