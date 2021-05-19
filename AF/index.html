@@ -102,14 +102,15 @@
             instructions.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM
             advancedTexture.addControl(instructions);
 
-            // Ground
-            var sphere = BABYLON.Mesh.CreateSphere("sphere", 6, 2, scene);
+            var sphere = BABYLON.Mesh.CreateSphere("sphere", 10, 2, scene);
 
             // Move the sphere upward 1/2 its height
-            sphere.position.y = 1;
+            sphere.position.z = 4.75
+            sphere.position.y = 0.25;
+            sphere.scaling = new BABYLON.Vector3(0.05, 0.05, 0.05)
 
             // Our built-in 'ground' shape. Params: name, width, depth, subdivs, scene
-            var ground = BABYLON.Mesh.CreateGround("ground1", 0, 0, 0, scene);
+            var ground = BABYLON.Mesh.CreateGround("ground", 0, 10, 5, scene);
 
             // GUI
             var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
@@ -122,7 +123,7 @@
             button1.background = "green";
             button1.onPointerUpObservable.add(function() {
                 particleSystem.start()
-                particleSystem.emitter = new BABYLON.Vector3(0,2,0)
+                particleSystem.emitter = new BABYLON.Vector3(0, 1, 0)
                 explosao.play()
                 button1.isVisible = false
             });
