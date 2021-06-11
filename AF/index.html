@@ -83,16 +83,6 @@
             var light2 = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(0, -0.5, -1.0), scene);
             light2.position = new BABYLON.Vector3(0, 5, 5);
 
-            // Skybox
-            var skybox = BABYLON.MeshBuilder.CreateBox("skyBox", { size: 1000 }, scene);
-            var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
-            skyboxMaterial.backFaceCulling = false;
-            skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("textures/skybox4", scene);
-            skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
-            skyboxMaterial.diffuseColor = BABYLON.Color3.Black()
-            skyboxMaterial.specularColor = BABYLON.Color3.Black();
-            skybox.material = skyboxMaterial;
-
             // GUI
             var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
             var instructions = new BABYLON.GUI.TextBlock();
@@ -103,21 +93,19 @@
             instructions.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM
             advancedTexture.addControl(instructions);
 
-            var sphere = BABYLON.Mesh.CreateSphere("sphere", 10, 2, scene);
-
-            // Move the sphere upward 1/2 its height
+            var sphere = BABYLON.Mesh.CreateSphere("sphere1", 2, 1, scene);
             sphere.position.z = 4.75
             sphere.position.y = 0.25;
-            sphere.scaling = new BABYLON.Vector3(0.05, 0.05, 0.05)
-            // sphere.physicsImpostor = new BABYLON.PhysicsImpostor(sphere, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1, restitution: 0.9 }, scene);
+            sphere.physicsImpostor = new BABYLON.PhysicsImpostor(sphere, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1, restitution: 0.0 }, scene);
 
-            var materialSphere = new BABYLON.StandardMaterial("mat0", scene);
-            materialSphere.diffuseColor = new BABYLON.Color3(1, 0, 0);
-            materialSphere.bumpTexture = new BABYLON.Texture("texture/wood.jpg", scene);
-            sphere.material = materialSphere
-
-            // Our built-in 'ground' shape. Params: name, width, depth, subdivs, scene
-            var ground = BABYLON.Mesh.CreateGround("ground", 0, 10, 5, scene);
+            var pista = new BABYLON.Mesh(scene);
+            
+            var box1 = BABYLON.MeshBuilder.CreateBox("box1", {height: 1, width: 10});
+            box1.scaling.z = 8;
+            box1.scaling.x = 5;
+            box1.position.x = 8;
+            box1.position.y = -5;
+            box1.rotation.z = 6;
 
             // GUI
             var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
@@ -138,9 +126,9 @@
 
 
             // Adicionado e aplicado colisão na câmera e no chão
-            scene.collisionsEnabled = false;
-            ground.collisionsEnabled = false;
-            ground.checkCollisions = false;
+            // scene.collisionsEnabled = false;
+            // ground.collisionsEnabled = false;
+            // ground.checkCollisions = false;
 
             return scene;
         }
