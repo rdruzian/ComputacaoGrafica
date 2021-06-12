@@ -99,6 +99,9 @@
             esfera.position.z = -0.8
             esfera.physicsImpostor = new BABYLON.PhysicsImpostor(esfera, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1, restitution: 0.9 }, scene);
             esfera.physicsImpostor.applyImpulse(new BABYLON.Vector3(0.5, 6, -1), esfera.getAbsolutePosition());
+            const esferaTexture = new BABYLON.StandardMaterial("sphere")
+            esferaTexture.diffuseTexture = new BABYLON.Texture("textures/esfera.png")
+            esfera.material = esferaTexture
 
             var pista = new BABYLON.Mesh(scene);
             
