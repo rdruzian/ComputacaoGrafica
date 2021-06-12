@@ -60,7 +60,7 @@
             var scene = new BABYLON.Scene(engine);
             scene.enablePhysics()
 
-            var camera1 = new BABYLON.ArcRotateCamera("camera1", Math.PI / 2, Math.PI / 4, 10, new BABYLON.Vector3(0, 0, 0), scene);
+            var camera1 = new BABYLON.ArcRotateCamera("camera1", Math.PI / 2, Math.PI / 4, 10, new BABYLON.Vector3(0, 20, 20), scene);
             scene.activeCamera = camera1;
             scene.activeCamera.attachControl(canvas, true);
             camera1.lowerRadiusLimit = 2;
@@ -93,42 +93,32 @@
             instructions.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM
             advancedTexture.addControl(instructions);
 
-            var sphere = BABYLON.Mesh.CreateSphere("sphere1", 2, 1, scene);
-            sphere.position.z = 4.75
-            sphere.position.y = 0.25;
-            sphere.physicsImpostor = new BABYLON.PhysicsImpostor(sphere, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1, restitution: 0.0 }, scene);
-
+            var esfera = BABYLON.Mesh.CreateSphere("sphere1", 2, 1, scene);
+            esfera.position.x = 2.5
+            esfera.position.y = 1
+            esfera.position.z = -0.8        
+            esfera.physicsImpostor = new BABYLON.PhysicsImpostor(esfera, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1, restitution: 0.0 }, scene);
+            esfera.physicsImpostor.applyImpulse(new BABYLON.Vector3(0.5, 6, -1), esfera.getAbsolutePosition());
+            
             var pista = new BABYLON.Mesh(scene);
             
-            var box1 = BABYLON.MeshBuilder.CreateBox("box1", {height: 1, width: 10});
+            var box1 = BABYLON.MeshBuilder.CreateBox("box1", {height: 0.5, width: 0.5});
             box1.scaling.z = 8;
             box1.scaling.x = 5;
-            box1.position.x = 8;
-            box1.position.y = -5;
-            box1.rotation.z = 6;
+            box1.position.x = 0;
+            box1.position.y = 0;
+            box1.position.z = 0;
+            box1.rotation.y = 5;
+            box1.physicsImpostor = new BABYLON.PhysicsImpostor(box1, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 0, restitution: 0.9 }, scene);
+
+            const wood = new BABYLON.StandardMaterial("wood")
+            wood.diffuseTexture = new BABYLON.Texture("textures/wood.jpg")
+            box1.material = wood
+            
+
 
             // GUI
             var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
-
-            var button1 = BABYLON.GUI.Button.CreateSimpleButton("but1", "Click Me");
-            button1.width = "150px"
-            button1.height = "40px";
-            button1.color = "white";
-            button1.cornerRadius = 20;
-            button1.background = "green";
-            button1.onPointerUpObservable.add(function() {
-                particleSystem.start()
-                particleSystem.emitter = new BABYLON.Vector3(0, 1, 0)
-                explosao.play()
-                button1.isVisible = false
-            });
-            advancedTexture.addControl(button1);  
-
-
-            // Adicionado e aplicado colisão na câmera e no chão
-            // scene.collisionsEnabled = false;
-            // ground.collisionsEnabled = false;
-            // ground.checkCollisions = false;
 
             return scene;
         }
