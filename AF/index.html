@@ -113,10 +113,10 @@
             var borda6 = new Borda(box3, -1.3, -4.3, box3.position.z, "borda6", wood)
 
             //(box, scaling, position, rotationY, nameBox, wood, pai)
-            var tunel1 = new Tunel(null, new BABYLON.Vector3(5, 5, 0.2), new BABYLON.Vector3(0, -2.2, -12), 0, "tunel1", wood)
-            var tunel11 = new Tunel(tunel1, new BABYLON.Vector3(3.5, 4.5, 0.2), new BABYLON.Vector3(-1.15, -1.8, -13.3), Math.PI/2, "tunel11", wood)
-            var tunel12 = new Tunel(tunel1, new BABYLON.Vector3(3.5, 4.5, 0.2), new BABYLON.Vector3(1.15, -1.8, -13.3), Math.PI/2, "tunel12", wood)
-            var tunel13 = new Tunel(tunel1, new BABYLON.Vector3(5, 4.5, 0.2), new BABYLON.Vector3(0, -1.9, -14.5), 0, "tunel13", wood)
+            var tunel1 = new Tunel(null, new BABYLON.Vector3(5, 5, 0.2), new BABYLON.Vector3(0, -2.2, -12), new BABYLON.Vector3(0, 0, 0), "tunel1", wood)
+            var tunel11 = new Tunel(tunel1, new BABYLON.Vector3(3.5, 4.5, 0.2), new BABYLON.Vector3(-1.15, -1.8, -13.3), new BABYLON.Vector3(0, Math.PI/2, 0), "tunel11", wood)
+            var tunel12 = new Tunel(tunel1, new BABYLON.Vector3(3.5, 4.5, 0.2), new BABYLON.Vector3(1.15, -1.8, -13.3), new BABYLON.Vector3(0, Math.PI/2, 0), "tunel12", wood)
+            var tunel13 = new Tunel(tunel1, new BABYLON.Vector3(5, 4.5, 0.2), new BABYLON.Vector3(0, -1.9, -14.5), new BABYLON.Vector3(0, 0, 0), "tunel13", wood)
 
             return scene;
         }
@@ -145,24 +145,20 @@
             return borda
         }
 
-        function Tunel(box, scaleVector, positionVector, rotationY, nameBox, wood) {
+        function Tunel(box, scaleVector, positionVector, rotationVector, nameBox, wood) {
             var tunel = null
             if(box === null) {
                 tunel = BABYLON.MeshBuilder.CreateBox(nameBox, {height: 0.5, width: 0.5});
                 tunel.scaling = scaleVector
                 tunel.position = positionVector
-                if(rotationY === Math.PI/2) {
-                    tunel.rotation.y = rotationY
-                }
+                tunel.rotation = rotationVector
                 tunel.material = wood
                 tunel.physicsImpostor = new BABYLON.PhysicsImpostor(tunel, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, restitution: 0.9 }, scene);
             } else {
                 tunel = box.clone(nameBox)
                 tunel.scaling = scaleVector
                 tunel.position = positionVector
-                if(rotationY === Math.PI/2) {
-                    tunel.rotation.y = rotationY
-                }
+                tunel.rotation = rotationVector
                 tunel.material = wood
                 tunel.physicsImpostor = new BABYLON.PhysicsImpostor(tunel, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, restitution: 0.9 }, scene);
             }
