@@ -54,8 +54,8 @@
 
             var scene = new BABYLON.Scene(engine);
             scene.enablePhysics()
-
-            var camera1 = new BABYLON.ArcRotateCamera("camera1", Math.PI/4, Math.PI/2, 10, new BABYLON.Vector3(5, 10, -5), scene);
+            // new BABYLON.Vector3(2, 10, 5)
+            var camera1 = new BABYLON.ArcRotateCamera("camera1", Math.PI/2, Math.PI/4, 10, new BABYLON.Vector3(2, 10, 5), scene);
             scene.activeCamera = camera1;
             scene.activeCamera.attachControl(canvas, true);
 
@@ -99,9 +99,12 @@
 
             // INICIALIZAÇÃO DAS ESFERAS
             var initialSphere = new Esfera("esfera1", new BABYLON.Vector3(0, 3, 1.7), esferaTexture1)
-            var secondSphere = new Esfera("esfera2", new BABYLON.Vector3(0, -4, -33.5), esferaTexture1)
+            // var secondSphere = new Esfera("esfera2", new BABYLON.Vector3(0, -4, -33.5), esferaTexture1)
+            initialSphere.actionManager = new BABYLON.ActionManager(scene)
             
+
             // CRIAÇÃO DA PISTA
+            // nível 1
             var box1 = new Pista(0, 0, 0, -0.3, 0, 0, "box1", wood)
             var borda1 = new Borda(box1, 1.3, 1.02, 0, "borda1", wood)
             var borda2 = new Borda(box1, -1.3, 1.02, 0, "borda2", wood)
@@ -110,19 +113,20 @@
             var borda3 = new Borda(box2, 1.3, -0.05, box2.position.z, "borda3", wood)
             var borda4 = new Borda(box2, -1.3, -0.05, box2.position.z, "borda4", wood)
 
-            var box3 = new Pista(0, -4.5, -16, -0.2, 0, 0, "box3", wood)
+            // nivel 2
+            var box3 = new Pista(0, -4.5, -15.5, -0.2, 0, 0, "box3", wood)
             var borda5 = new Borda(box3, 1.3, -3.5, box3.position.z, "borda5", wood)
             var borda6 = new Borda(box3, -1.3, -3.5, box3.position.z, "borda6", wood)
             box3.actionManager = new BABYLON.ActionManager(scene)
             box3.actionManager.registerAction(
-                new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function () {moeda.play()})
+                new BABYLON.ExecuteCodeAction({trigger: BABYLON.ActionManager.OnPickTrigger, parameter: initialSphere}, moeda.play())
             )
             
-            var tunel1 = new Tunel(null, new BABYLON.Vector3(5, 4, 0.4), new BABYLON.Vector3(0, -2, -11.8), new BABYLON.Vector3(0, 0, 0), "tunel1", wood)
-            var tunel11 = new Tunel(tunel1, new BABYLON.Vector3(3.5, 4, 0.4), new BABYLON.Vector3(-1.14, -0.7, -12.8), new BABYLON.Vector3(0, Math.PI/2, 0), "tunel11", wood)
-            var tunel12 = new Tunel(tunel1, new BABYLON.Vector3(3.5, 4, 0.4), new BABYLON.Vector3(1.16, -0.7, -12.8), new BABYLON.Vector3(0, Math.PI/2, 0), "tunel12", wood)
-            var tunel13 = new Tunel(tunel1, new BABYLON.Vector3(5.5, 4, 0.4), new BABYLON.Vector3(0, -0.7, -13.9), new BABYLON.Vector3(0, 0, 0), "tunel13", wood)
+            var tunel1 = new Tunel(null, new BABYLON.Vector3(5, 4, 0.2), new BABYLON.Vector3(0, -2, -11.6), new BABYLON.Vector3(0, 0, 0), "tunel1", wood)
+            var tunel11 = new Tunel(tunel1, new BABYLON.Vector3(4, 4.4, 0.2), new BABYLON.Vector3(-1.4, -0.7, -12.6), new BABYLON.Vector3(0, Math.PI/2, 0), "tunel11", wood)
+            var tunel12 = new Tunel(tunel1, new BABYLON.Vector3(4, 4.4, 0.2), new BABYLON.Vector3(1.4, -0.7, -12.6), new BABYLON.Vector3(0, Math.PI/2, 0), "tunel12", wood)
 
+            // nivel 3
             var box4 = new Pista(0, -5.2, -23, 0, 0, 0, "box4", wood)
             var borda7 = new Borda(box4, 1.3, -4.2, box4.position.z, "borda7", wood)
             var borda8 = new Borda(box4, -1.3, -4.2, box4.position.z, "borda8", wood)
@@ -130,6 +134,7 @@
             var box5 = new Pista(0, -4.5, -27, -1.5, 0, 0, "box5", wood)
             box5.scaling.z = 2
             box5.actionManager = new BABYLON.ActionManager(scene)
+            // ADICIONAR um som aqui tb
             box5.actionManager.registerAction(
                 new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function () {
                     const zSlide = new BABYLON.Animation("zSlide", "position.z", 4, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_LOOP)
@@ -154,7 +159,18 @@
             var box6 = new Pista(0, -5.2, -33.5, 0, 0, 0, "box6", wood)
             var borda9 = new Borda(box6, 1.3, -4.2, box6.position.z,"borda9", wood)
             var borda10 = new Borda(box6, -1.3, -4.2, box6.position.z,"borda10", wood)
+            
+            // nivel 4
+            var tunel2 = new Tunel(null, new BABYLON.Vector3(5, 4, 0.2), new BABYLON.Vector3(0, -6.1, -37.4), new BABYLON.Vector3(0, 0, 0), "tunel2", wood)
+            var tunel21 = new Tunel(tunel1, new BABYLON.Vector3(5.2, 9, 0.2), new BABYLON.Vector3(-1.2, -6.3, -38.8), new BABYLON.Vector3(0, Math.PI/2, 0), "tunel21", wood)
+            var tunel23 = new Tunel(tunel1, new BABYLON.Vector3(5.2, 9, 0.2), new BABYLON.Vector3(0, -6.3, -40), new BABYLON.Vector3(0, 0, 0), "tunel23", wood)
+            
+            var box7 = new Pista(2.6, -9, -38.7, 0.1, Math.PI/2, 0, "box7", wood)
+            var borda11 = new Borda(box7, 2.8, -8.2, box7.position.z+1.3,"borda11", wood)
+            var borda12 = new Borda(box7, 2.8, -8.2, box7.position.z-1.3,"borda12", wood)
+            // ADICIONAR PARTICULA e SOM
 
+            // nivel 5
             return scene;
         }
         
@@ -212,7 +228,7 @@
             esfera.position = positionVector
             esfera.material = textura
 
-            esfera.physicsImpostor = new BABYLON.PhysicsImpostor(esfera, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1, restitution: 0.9 }, scene);
+            esfera.physicsImpostor = new BABYLON.PhysicsImpostor(esfera, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 10, restitution: 0.9 }, scene);
             esfera.physicsImpostor.applyImpulse(new BABYLON.Vector3(0, 0, -1), esfera.getAbsolutePosition());
 
             return esfera
