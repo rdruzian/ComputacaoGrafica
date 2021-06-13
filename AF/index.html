@@ -111,6 +111,13 @@
             var box3 = new Pista(0, -4.5, -16, -0.2, 0, 0, "box3", wood)
             var borda5 = new Borda(box3, 1.3, -4.3, box3.position.z, "borda5", wood)
             var borda6 = new Borda(box3, -1.3, -4.3, box3.position.z, "borda6", wood)
+            box3.actionManager = new BABYLON.ActionManager(scene)
+            box3.actionManager.registerAction(
+                new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickUpTrigger, function () {
+                    moeda.play()
+                })
+
+            )
 
             //(box, scaling, position, rotationY, nameBox, wood, pai)
             var tunel1 = new Tunel(null, new BABYLON.Vector3(5, 5, 0.55), new BABYLON.Vector3(0, -2.2, -11.8), new BABYLON.Vector3(0, 0, 0), "tunel1", wood)
