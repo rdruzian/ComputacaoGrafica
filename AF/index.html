@@ -60,7 +60,7 @@
             var scene = new BABYLON.Scene(engine);
             scene.enablePhysics()
 
-            var camera1 = new BABYLON.ArcRotateCamera("camera1", Math.PI / 2, Math.PI / 4, 10, new BABYLON.Vector3(0, 5, 5), scene);
+            var camera1 = new BABYLON.ArcRotateCamera("camera1", Math.PI/4, Math.PI/2, 10, new BABYLON.Vector3(5, 10, -5), scene);
             scene.activeCamera = camera1;
             scene.activeCamera.attachControl(canvas, true);
 
@@ -87,10 +87,10 @@
             advancedTexture.addControl(instructions);
 
             var esfera = BABYLON.Mesh.CreateSphere("sphere1", 2, 1, scene);
-            esfera.position.y = 3
-            esfera.position.z = -0.6
+            esfera.position = new BABYLON.Vector3(0, 3, 1.7)
             // esfera.physicsImpostor = new BABYLON.PhysicsImpostor(esfera, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1, restitution: 0.9 }, scene);
             // esfera.physicsImpostor.applyImpulse(new BABYLON.Vector3(0, 1, 0), esfera.getAbsolutePosition());
+
             const esferaTexture = new BABYLON.StandardMaterial("sphere")
             esferaTexture.diffuseTexture = new BABYLON.Texture("textures/esfera.png")
             esfera.material = esferaTexture
@@ -98,8 +98,8 @@
             const wood = new BABYLON.StandardMaterial("wood")
             wood.diffuseTexture = new BABYLON.Texture("textures/wood.jpg")
 
-            //(positionX, positionY, positionZ, rotationX, rotationY, rotationZ, nameBox, wood, pai)
-            //(box, positionX, positionY, positionZ, nameBox, wood, pai)
+            // (positionX, positionY, positionZ, rotationX, rotationY, rotationZ, nameBox, wood, pai)
+            // (box, positionX, positionY, positionZ, nameBox, wood, pai)
             var box1 = new Pista(0, 0, 0, -0.3, 0, 0, "box1", wood)
             var borda1 = new Borda(box1, 1.3, 0.22, 0, "borda1", wood)
             var borda2 = new Borda(box1, -1.3, 0.22, 0, "borda2", wood)
@@ -113,10 +113,17 @@
             var borda6 = new Borda(box3, -1.3, -4.3, box3.position.z, "borda6", wood)
 
             //(box, scaling, position, rotationY, nameBox, wood, pai)
-            var tunel1 = new Tunel(null, new BABYLON.Vector3(5, 5, 0.2), new BABYLON.Vector3(0, -2.2, -12), new BABYLON.Vector3(0, 0, 0), "tunel1", wood)
-            var tunel11 = new Tunel(tunel1, new BABYLON.Vector3(3.5, 4.5, 0.2), new BABYLON.Vector3(-1.15, -1.8, -13.3), new BABYLON.Vector3(0, Math.PI/2, 0), "tunel11", wood)
-            var tunel12 = new Tunel(tunel1, new BABYLON.Vector3(3.5, 4.5, 0.2), new BABYLON.Vector3(1.15, -1.8, -13.3), new BABYLON.Vector3(0, Math.PI/2, 0), "tunel12", wood)
-            var tunel13 = new Tunel(tunel1, new BABYLON.Vector3(5, 4.5, 0.2), new BABYLON.Vector3(0, -1.9, -14.5), new BABYLON.Vector3(0, 0, 0), "tunel13", wood)
+            var tunel1 = new Tunel(null, new BABYLON.Vector3(5, 5, 0.55), new BABYLON.Vector3(0, -2.2, -11.8), new BABYLON.Vector3(0, 0, 0), "tunel1", wood)
+            var tunel11 = new Tunel(tunel1, new BABYLON.Vector3(3.5, 4.5, 0.55), new BABYLON.Vector3(-1.14, -1.6, -12.8), new BABYLON.Vector3(0, Math.PI/2, 0), "tunel11", wood)
+            var tunel12 = new Tunel(tunel1, new BABYLON.Vector3(3.5, 4.5, 0.55), new BABYLON.Vector3(1.16, -1.6, -12.8), new BABYLON.Vector3(0, Math.PI/2, 0), "tunel12", wood)
+            var tunel13 = new Tunel(tunel1, new BABYLON.Vector3(5, 4.5, 0.55), new BABYLON.Vector3(0, -1.7, -13.9), new BABYLON.Vector3(0, 0, 0), "tunel13", wood)
+
+            // Position Y: direção cima para positivo e baixo para negativo
+            // Position X: direção esquerda para positivo e direita para negativo
+            // Position Z: direção traz positivo e para frente para valores negativos
+            var box4 = new Pista(0, -5.2, -23, 0, 0, 0, "box4", wood)
+            var borda7 = new Borda(box4, 1.3, -5, box4.position.z, "borda7", wood)
+            var borda8 = new Borda(box4, -1.3, -5, box4.position.z, "borda8", wood)
 
             return scene;
         }
