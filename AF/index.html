@@ -50,10 +50,6 @@
         var createDefaultEngine = function () { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true, disableWebGL2Support: false }); };
 
         var createScene = function () {
-
-            // Low Poly Character with Blender Tutorial of Grant Abbitt: https://www.youtube.com/user/mediagabbitt
-            // Character animations by Mixamo: https://www.mixamo.com/
-
             engine.enableOfflineSupport = false;
 
             // Scene and Camera
@@ -67,7 +63,6 @@
             var particleSystem = new BABYLON.ParticleSystem("particles", 2000)
             particleSystem.particleTexture = new BABYLON.Texture("textures/flare.png")
             particleSystem.targetStopDuration = 2
-            // NAO ESQUECER DE STARTAR A PARTICULA COM particleSystem.start()
 
             var explosao = new BABYLON.Sound("Explosao", "assets/explosao.wav", scene)
             var moeda = new BABYLON.Sound("Moeda", "assets/moeda.mp3", scene)
@@ -86,80 +81,74 @@
             instructions.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM
             advancedTexture.addControl(instructions);
 
-            var esfera = BABYLON.Mesh.CreateSphere("sphere1", 2, 1, scene);
-            esfera.position = new BABYLON.Vector3(0, 3, 1.7)
-            // esfera.physicsImpostor = new BABYLON.PhysicsImpostor(esfera, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1, restitution: 0.9 }, scene);
-            // esfera.physicsImpostor.applyImpulse(new BABYLON.Vector3(0, 1, 0), esfera.getAbsolutePosition());
-
-            const esferaTexture = new BABYLON.StandardMaterial("sphere")
-            esferaTexture.diffuseTexture = new BABYLON.Texture("textures/esfera.png")
-            esfera.material = esferaTexture
-
+            const esferaTexture1 = new BABYLON.StandardMaterial("sphere")
+            esferaTexture1.diffuseTexture = new BABYLON.Texture("textures/esfera.png")
+            
+            var initialSphere = new Esfera("esfera1", new BABYLON.Vector3(0, 3, 1.7), esferaTexture1)
+            
             const wood = new BABYLON.StandardMaterial("wood")
             wood.diffuseTexture = new BABYLON.Texture("textures/wood.jpg")
 
             // (positionX, positionY, positionZ, rotationX, rotationY, rotationZ, nameBox, wood, pai)
             // (box, positionX, positionY, positionZ, nameBox, wood, pai)
             var box1 = new Pista(0, 0, 0, -0.3, 0, 0, "box1", wood)
-            var borda1 = new Borda(box1, 1.3, 0.22, 0, "borda1", wood)
-            var borda2 = new Borda(box1, -1.3, 0.22, 0, "borda2", wood)
+            var borda1 = new Borda(box1, 1.3, 1.02, 0, "borda1", wood)
+            var borda2 = new Borda(box1, -1.3, 1.02, 0, "borda2", wood)
 
             var box2 = new Pista(0, -1.1, -7.6, 0, 0, 0, "box2", wood)
-            var borda3 = new Borda(box2, 1.3, -0.85, box2.position.z, "borda3", wood)
-            var borda4 = new Borda(box2, -1.3, -0.85, box2.position.z, "borda4", wood)
+            var borda3 = new Borda(box2, 1.3, -0.05, box2.position.z, "borda3", wood)
+            var borda4 = new Borda(box2, -1.3, -0.05, box2.position.z, "borda4", wood)
 
             var box3 = new Pista(0, -4.5, -16, -0.2, 0, 0, "box3", wood)
-            var borda5 = new Borda(box3, 1.3, -4.3, box3.position.z, "borda5", wood)
-            var borda6 = new Borda(box3, -1.3, -4.3, box3.position.z, "borda6", wood)
+            var borda5 = new Borda(box3, 1.3, -3.5, box3.position.z, "borda5", wood)
+            var borda6 = new Borda(box3, -1.3, -3.5, box3.position.z, "borda6", wood)
             box3.actionManager = new BABYLON.ActionManager(scene)
             box3.actionManager.registerAction(
-                new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickUpTrigger, function () {
+                new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function () {
                     moeda.play()
                 })
-
             )
 
             //(box, scaling, position, rotationY, nameBox, wood, pai)
-            var tunel1 = new Tunel(null, new BABYLON.Vector3(5, 5, 0.55), new BABYLON.Vector3(0, -2.2, -11.8), new BABYLON.Vector3(0, 0, 0), "tunel1", wood)
-            var tunel11 = new Tunel(tunel1, new BABYLON.Vector3(3.5, 4.5, 0.55), new BABYLON.Vector3(-1.14, -1.6, -12.8), new BABYLON.Vector3(0, Math.PI/2, 0), "tunel11", wood)
-            var tunel12 = new Tunel(tunel1, new BABYLON.Vector3(3.5, 4.5, 0.55), new BABYLON.Vector3(1.16, -1.6, -12.8), new BABYLON.Vector3(0, Math.PI/2, 0), "tunel12", wood)
-            var tunel13 = new Tunel(tunel1, new BABYLON.Vector3(5, 4.5, 0.55), new BABYLON.Vector3(0, -1.7, -13.9), new BABYLON.Vector3(0, 0, 0), "tunel13", wood)
+            var tunel1 = new Tunel(null, new BABYLON.Vector3(5, 4, 0.4), new BABYLON.Vector3(0, -2, -11.8), new BABYLON.Vector3(0, 0, 0), "tunel1", wood)
+            var tunel11 = new Tunel(tunel1, new BABYLON.Vector3(3.5, 4, 0.4), new BABYLON.Vector3(-1.14, -0.7, -12.8), new BABYLON.Vector3(0, Math.PI/2, 0), "tunel11", wood)
+            var tunel12 = new Tunel(tunel1, new BABYLON.Vector3(3.5, 4, 0.4), new BABYLON.Vector3(1.16, -0.7, -12.8), new BABYLON.Vector3(0, Math.PI/2, 0), "tunel12", wood)
+            var tunel13 = new Tunel(tunel1, new BABYLON.Vector3(5.5, 4, 0.4), new BABYLON.Vector3(0, -0.7, -13.9), new BABYLON.Vector3(0, 0, 0), "tunel13", wood)
 
             // Position Y: direção cima para positivo e baixo para negativo
             // Position X: direção esquerda para positivo e direita para negativo
             // Position Z: direção traz positivo e para frente para valores negativos
             var box4 = new Pista(0, -5.2, -23, 0, 0, 0, "box4", wood)
-            var borda7 = new Borda(box4, 1.3, -5, box4.position.z, "borda7", wood)
-            var borda8 = new Borda(box4, -1.3, -5, box4.position.z, "borda8", wood)
+            var borda7 = new Borda(box4, 1.3, -4.2, box4.position.z, "borda7", wood)
+            var borda8 = new Borda(box4, -1.3, -4.2, box4.position.z, "borda8", wood)
+
             var box5 = new Pista(0, -4.5, -27, -1.5, 0, 0, "box5", wood)
             box5.scaling.z = 2
             box5.actionManager = new BABYLON.ActionManager(scene)
             box5.actionManager.registerAction(
-                new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickUpTrigger, function () {
+                new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function () {
                     const zSlide = new BABYLON.Animation("zSlide", "position.z", 4, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_LOOP)
                     const keyFrames = []; 
-
                     keyFrames.push({
                         frame: 0,
                         value: -30
                     });
-
                     keyFrames.push({
                         frame: 2,
                         value: -32
                     });
-
                     keyFrames.push({
                         frame: 4,
                         value: -34
                     });
-
                     zSlide.setKeys(keyFrames);
-
                     box5.animations.push(zSlide);
-
                     scene.beginAnimation(box5, 0, 4, true);
                 }))           
+            
+            var box6 = new Pista(0, -5.2, -33.5, 0, 0, 0, "box6", wood)
+            var borda9 = new Borda(box6, 1.3, -4.2, box6.position.z,"borda9", wood)
+            var borda10 = new Borda(box6, -1.3, -4.2, box6.position.z,"borda10", wood)
 
             return scene;
         }
@@ -180,7 +169,7 @@
 
         function Borda(pista, positionX, positionY, positionZ, nameBox, wood) {
             var borda = pista.clone(nameBox);
-            borda.scaling = new BABYLON.Vector3(0.3, 1.8, 8)
+            borda.scaling = new BABYLON.Vector3(0.3, 4, 8)
             borda.position = new BABYLON.Vector3(positionX, positionY, positionZ)
             borda.material = wood
             borda.physicsImpostor = new BABYLON.PhysicsImpostor(borda, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, restitution: 0.9 }, scene);
@@ -209,8 +198,15 @@
             return tunel
         }
 
-        function wallAnimation(box) {
-            
+        function Esfera(nameSphere, positionVector, textura) {
+            var esfera = BABYLON.Mesh.CreateSphere("sphere1", 2, 1, scene);
+            esfera.position = positionVector
+            esfera.material = textura
+
+            esfera.physicsImpostor = new BABYLON.PhysicsImpostor(esfera, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1, restitution: 0.9 }, scene);
+            esfera.physicsImpostor.applyImpulse(new BABYLON.Vector3(0, 0, -1), esfera.getAbsolutePosition());
+
+            return esfera
         }     
 
         initFunction = async function () {
