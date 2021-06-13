@@ -143,7 +143,6 @@
             var box5 = new Pista(0, -4.5, -27, -1.5, 0, 0, "box5", wood)
             box5.scaling.z = 2
             box5.actionManager = new BABYLON.ActionManager(scene)
-            // ADICIONAR um som aqui tb
             box5.actionManager.registerAction(
                 new BABYLON.SetValueAction({trigger: BABYLON.ActionManager.OnIntersectionEnterTrigger, parameter: initialSphere}, secondSphere, "isVisible", true)
             )
@@ -167,9 +166,9 @@
                     zSlide.setKeys(keyFrames);
                     box5.animations.push(zSlide);
                     scene.beginAnimation(box5, 0, 4, true);
-                    
+
                     secondSphere.physicsImpostor = new BABYLON.PhysicsImpostor(secondSphere, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1, restitution: 0.9 }, scene);
-                    secondSphere.physicsImpostor.applyImpulse(new BABYLON.Vector3(0, -1, 0), secondSphere.getAbsolutePosition());
+                    secondSphere.physicsImpostor.applyImpulse(new BABYLON.Vector3(0, 0, -1), secondSphere.getAbsolutePosition());
                 })
             )      
             
