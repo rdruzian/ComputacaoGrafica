@@ -74,7 +74,7 @@
             // GUI
             var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
             var instructions = new BABYLON.GUI.TextBlock();
-            instructions.text = "Renato Druzian RA - 121058";
+            instructions.text = "Renato Druzian RA: 121058";
             instructions.color = "white";
             instructions.fontSize = 16;
             instructions.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT
@@ -146,7 +146,7 @@
                 new BABYLON.ExecuteCodeAction({trigger: BABYLON.ActionManager.OnIntersectionEnterTrigger, parameter: initialSphere}, function () {
                     initialSphere.isVisible = false
                     secondSphere.isVisible = true
-                    secondSphere.physicsImpostor = new BABYLON.PhysicsImpostor(secondSphere, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1, restitution: 0.9 }, scene);
+                    secondSphere.physicsImpostor = new BABYLON.PhysicsImpostor(secondSphere, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 0.4, restitution: 0.9 }, scene);
                     box5.physicsImpostor = new BABYLON.PhysicsImpostor(box5, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0.1, restitution: 0.9 }, scene);
                     const zSlide = new BABYLON.Animation("zSlide", "position.z", 4, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT)
                     const keyFrames = []; 
@@ -166,7 +166,7 @@
                     box5.animations.push(zSlide);
                     scene.beginAnimation(box5, 0, 4, true);
                     box5.isVisible = false
-                    secondSphere.physicsImpostor.applyImpulse(new BABYLON.Vector3(0,0, 0), secondSphere.getAbsolutePosition());
+                    secondSphere.physicsImpostor.applyImpulse(new BABYLON.Vector3(0, 0, 0), secondSphere.getAbsolutePosition());
                 })
             )      
             
