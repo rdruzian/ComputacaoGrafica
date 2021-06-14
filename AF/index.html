@@ -55,7 +55,7 @@
             var scene = new BABYLON.Scene(engine);
             scene.enablePhysics()
             // new BABYLON.Vector3(2, 10, 5)
-            var camera1 = new BABYLON.ArcRotateCamera("camera1", 0, Math.PI/4, 10, new BABYLON.Vector3(7, 5, -10), scene);
+            var camera1 = new BABYLON.ArcRotateCamera("camera1", 0, Math.PI/4, 10, new BABYLON.Vector3(8, -10, -20), scene);
             scene.activeCamera = camera1;
             scene.activeCamera.attachControl(canvas, true);
 
@@ -124,8 +124,6 @@
             var borda6 = new Borda(box3, -1.3, -3.5, box3.position.z, "borda6", wood)
             box3.actionManager = new BABYLON.ActionManager(scene)
             box3.actionManager.registerAction(
-                new BABYLON.SetValueAction({trigger: BABYLON.ActionManager.OnIntersectionEnterTrigger, parameter: initialSphere}, initialSphere, "isVisible", true)
-            ).then(
                 new BABYLON.ExecuteCodeAction({trigger: BABYLON.ActionManager.OnIntersectionEnterTrigger, parameter: initialSphere}, function() {
                     moeda.play()
                 })
@@ -144,12 +142,10 @@
             box5.scaling.z = 2
             box5.actionManager = new BABYLON.ActionManager(scene)
             box5.actionManager.registerAction(
-                new BABYLON.SetValueAction({trigger: BABYLON.ActionManager.OnIntersectionEnterTrigger, parameter: initialSphere}, secondSphere, "isVisible", true)
-            )
-            .then(
-                new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnIntersectionEnterTrigger, function () {
+                new BABYLON.ExecuteCodeAction({trigger: BABYLON.ActionManager.OnIntersectionEnterTrigger, parameter: initialSphere}, function () {
                     initialSphere.isVisible = false
-                    const zSlide = new BABYLON.Animation("zSlide", "position.z", 4, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_LOOP)
+                    secondSphere.isVisible = true
+                    const zSlide = new BABYLON.Animation("zSlide", "position.z", 4, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT)
                     const keyFrames = []; 
                     keyFrames.push({
                         frame: 0,
@@ -184,11 +180,14 @@
             var box7 = new Pista(2.6, -9, -38.7, 0.1, Math.PI/2, 0, "box7", wood)
             var borda11 = new Borda(box7, 2.8, -8.2, box7.position.z+1.3,"borda11", wood)
             var borda12 = new Borda(box7, 2.8, -8.2, box7.position.z-1.3,"borda12", wood)
-            // ADICIONAR PARTICULA e SOM
-
-            // Position Y: direção cima para positivo e baixo para negativo
-            // Position X: direção esquerda para positivo e direita para negativo
-            // Position Z: direção traz positivo e para frente para valores negativos
+            box7.actionManager = new BABYLON.ActionManager(scene)
+            box7.actionManager.registerAction(
+                new BABYLON.ExecuteCodeAction({trigger: BABYLON.ActionManager.OnIntersectionEnterTrigger, parameter: secondSphere}, function () {
+                    particleSystem.emitter = new BABYLON.Vector3(2.6, -9, -38.7)
+                    explosao.play()
+                    particleSystem.start()
+                })
+            )
 
             // nivel 5
             var box8 = new Pista(7.9, -12, -36.2, 0.2, 0, 0, "box8", wood)
@@ -202,7 +201,29 @@
             var borda16 = new Borda(box9, 6.6, -11.7, box9.position.z,"borda16", wood)
             
             var tunel4 = new Tunel(null, new BABYLON.Vector3(5, 6, 0.2), new BABYLON.Vector3(7.9, -11.2, -24.5), new BABYLON.Vector3(0, 0, 0), "tunel4", wood)
-            //Adicionar colisão no tunel4, gerando efeito dominó...
+            tunel4.actionManager = new BABYLON.ActionManager(scene)
+            tunel4.actionManager.registerAction(
+                new BABYLON.ExecuteCodeAction({trigger: BABYLON.ActionManager.OnIntersectionEnterTrigger, parameter: secondSphere}, function () {
+                    tunel4.physicsImpostor = new BABYLON.PhysicsImpostor(tunel4, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 1, restitution: 0.9 }, scene);
+                    const xSlide = new BABYLON.Animation("xSlide", "rotation.x", 4, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT)
+                    const keyFrames = []; 
+                    keyFrames.push({
+                        frame: 0,
+                        value: Math.PI
+                    });
+                    keyFrames.push({
+                        frame: 2,
+                        value: Math.PI/4
+                    });
+                    keyFrames.push({
+                        frame: 4,
+                        value: Math.PI/2
+                    });
+                    xSlide.setKeys(keyFrames);
+                    tunel4.animations.push(xSlide);
+                    scene.beginAnimation(tunel4, 0, 4, true);
+                })
+            )
 
             var box10 = new Pista(7.9, -12.8, -20.5, 0, 0, 0, "box10", wood)
             var borda17 = new Borda(box10, 9.25, -11.7, box10.position.z,"borda17", wood)
@@ -212,12 +233,156 @@
             var borda19 = new Borda(box11, 9.25, -11.7, box11.position.z,"borda19", wood)
             var borda20 = new Borda(box11, 6.6, -11.7, box11.position.z,"borda20", wood)
 
-            var ficha1 = new Tunel(null, new BABYLON.Vector3(4.5, 6, 0.2), new BABYLON.Vector3(7.9, -11, -22.5), new BABYLON.Vector3(0, 0, 0), "ficha1", sand)
-            var ficha2 = new Tunel(null, new BABYLON.Vector3(4.5, 6, 0.2), new BABYLON.Vector3(7.9, -11, -20.5), new BABYLON.Vector3(0, 0, 0), "ficha2", sand)
-            var ficha3 = new Tunel(null, new BABYLON.Vector3(4.5, 6, 0.2), new BABYLON.Vector3(7.9, -11, -18.5), new BABYLON.Vector3(0, 0, 0), "ficha3", sand)
-            var ficha4 = new Tunel(null, new BABYLON.Vector3(4.5, 6, 0.2), new BABYLON.Vector3(7.9, -11, -16.5), new BABYLON.Vector3(0, 0, 0), "ficha4", sand)
-            var ficha5 = new Tunel(null, new BABYLON.Vector3(4.5, 6, 0.2), new BABYLON.Vector3(7.9, -11, -14.5), new BABYLON.Vector3(0, 0, 0), "ficha5", sand)
-            var ficha6 = new Tunel(null, new BABYLON.Vector3(4.5, 6, 0.2), new BABYLON.Vector3(7.9, -11, -12.5), new BABYLON.Vector3(0, 0, 0), "ficha6", sand)
+            var ficha1 = new Tunel(null, new BABYLON.Vector3(4.5, 6, 0.2), new BABYLON.Vector3(7.9, -11, -23.5), new BABYLON.Vector3(0, 0, 0), "ficha1", sand)
+            var ficha2 = new Tunel(null, new BABYLON.Vector3(4.5, 6, 0.2), new BABYLON.Vector3(7.9, -11, -22.5), new BABYLON.Vector3(0, 0, 0), "ficha2", sand)
+            var ficha3 = new Tunel(null, new BABYLON.Vector3(4.5, 6, 0.2), new BABYLON.Vector3(7.9, -11, -21.5), new BABYLON.Vector3(0, 0, 0), "ficha3", sand)
+            var ficha4 = new Tunel(null, new BABYLON.Vector3(4.5, 6, 0.2), new BABYLON.Vector3(7.9, -11, -20.5), new BABYLON.Vector3(0, 0, 0), "ficha4", sand)
+            var ficha5 = new Tunel(null, new BABYLON.Vector3(4.5, 6, 0.2), new BABYLON.Vector3(7.9, -11, -19.5), new BABYLON.Vector3(0, 0, 0), "ficha5", sand)
+            var ficha6 = new Tunel(null, new BABYLON.Vector3(4.5, 6, 0.2), new BABYLON.Vector3(7.9, -11, -18.5), new BABYLON.Vector3(0, 0, 0), "ficha6", sand)
+
+            ficha1.actionManager = new BABYLON.ActionManager(scene)
+            ficha1.actionManager.registerAction(
+                new BABYLON.ExecuteCodeAction({trigger: BABYLON.ActionManager.OnIntersectionEnterTrigger, parameter: tunel4}, function () {
+                    ficha1.physicsImpostor = new BABYLON.PhysicsImpostor(ficha1, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 1, restitution: 0.9 }, scene);
+                    const xSlide = new BABYLON.Animation("xSlide", "rotation.x", 4, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT)
+                    const keyFrames = []; 
+                    keyFrames.push({
+                        frame: 0,
+                        value: Math.PI
+                    });
+                    keyFrames.push({
+                        frame: 2,
+                        value: Math.PI/4
+                    });
+                    keyFrames.push({
+                        frame: 4,
+                        value: Math.PI/2
+                    });
+                    xSlide.setKeys(keyFrames);
+                    ficha1.animations.push(xSlide);
+                    scene.beginAnimation(ficha1, 0, 4, true);
+                })
+            )
+
+            ficha2.actionManager = new BABYLON.ActionManager(scene)
+            ficha2.actionManager.registerAction(
+                new BABYLON.ExecuteCodeAction({trigger: BABYLON.ActionManager.OnIntersectionEnterTrigger, parameter: ficha1}, function () {
+                    ficha2.physicsImpostor = new BABYLON.PhysicsImpostor(ficha2, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 1, restitution: 0.9 }, scene);
+                    const xSlide = new BABYLON.Animation("xSlide", "rotation.x", 4, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT)
+                    const keyFrames = []; 
+                    keyFrames.push({
+                        frame: 0,
+                        value: Math.PI
+                    });
+                    keyFrames.push({
+                        frame: 2,
+                        value: Math.PI/4
+                    });
+                    keyFrames.push({
+                        frame: 4,
+                        value: Math.PI/2
+                    });
+                    xSlide.setKeys(keyFrames);
+                    ficha2.animations.push(xSlide);
+                    scene.beginAnimation(ficha2, 0, 4, true);
+                })
+            )
+
+            ficha3.actionManager = new BABYLON.ActionManager(scene)
+            ficha3.actionManager.registerAction(
+                new BABYLON.ExecuteCodeAction({trigger: BABYLON.ActionManager.OnIntersectionEnterTrigger, parameter: ficha2}, function () {
+                    ficha3.physicsImpostor = new BABYLON.PhysicsImpostor(ficha3, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 1, restitution: 0.9 }, scene);
+                    const xSlide = new BABYLON.Animation("xSlide", "rotation.x", 4, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT)
+                    const keyFrames = []; 
+                    keyFrames.push({
+                        frame: 0,
+                        value: Math.PI
+                    });
+                    keyFrames.push({
+                        frame: 2,
+                        value: Math.PI/4
+                    });
+                    keyFrames.push({
+                        frame: 4,
+                        value: Math.PI/2
+                    });
+                    xSlide.setKeys(keyFrames);
+                    ficha3.animations.push(xSlide);
+                    scene.beginAnimation(ficha3, 0, 4, true);
+                })
+            )
+            
+            ficha4.actionManager = new BABYLON.ActionManager(scene)
+            ficha4.actionManager.registerAction(
+                new BABYLON.ExecuteCodeAction({trigger: BABYLON.ActionManager.OnIntersectionEnterTrigger, parameter: ficha3}, function () {
+                    ficha4.physicsImpostor = new BABYLON.PhysicsImpostor(ficha4, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 1, restitution: 0.9 }, scene);
+                    const xSlide = new BABYLON.Animation("xSlide", "rotation.x", 4, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT)
+                    const keyFrames = []; 
+                    keyFrames.push({
+                        frame: 0,
+                        value: Math.PI
+                    });
+                    keyFrames.push({
+                        frame: 2,
+                        value: Math.PI/4
+                    });
+                    keyFrames.push({
+                        frame: 4,
+                        value: Math.PI/2
+                    });
+                    xSlide.setKeys(keyFrames);
+                    ficha4.animations.push(xSlide);
+                    scene.beginAnimation(ficha4, 0, 4, true);
+                })
+            )
+            
+            ficha5.actionManager = new BABYLON.ActionManager(scene)
+            ficha5.actionManager.registerAction(
+                new BABYLON.ExecuteCodeAction({trigger: BABYLON.ActionManager.OnIntersectionEnterTrigger, parameter: ficha4}, function () {
+                    ficha5.physicsImpostor = new BABYLON.PhysicsImpostor(ficha5, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 1, restitution: 0.9 }, scene);
+                    const xSlide = new BABYLON.Animation("xSlide", "rotation.x", 4, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT)
+                    const keyFrames = []; 
+                    keyFrames.push({
+                        frame: 0,
+                        value: Math.PI
+                    });
+                    keyFrames.push({
+                        frame: 2,
+                        value: Math.PI/4
+                    });
+                    keyFrames.push({
+                        frame: 4,
+                        value: Math.PI/2
+                    });
+                    xSlide.setKeys(keyFrames);
+                    ficha5.animations.push(xSlide);
+                    scene.beginAnimation(ficha5, 0, 4, true);
+                })
+            )
+            
+            ficha6.actionManager = new BABYLON.ActionManager(scene)
+            ficha6.actionManager.registerAction(
+                new BABYLON.ExecuteCodeAction({trigger: BABYLON.ActionManager.OnIntersectionEnterTrigger, parameter: ficha5}, function () {
+                    ficha6.physicsImpostor = new BABYLON.PhysicsImpostor(ficha6, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 1, restitution: 0.9 }, scene);
+                    const xSlide = new BABYLON.Animation("xSlide", "rotation.x", 4, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT)
+                    const keyFrames = []; 
+                    keyFrames.push({
+                        frame: 0,
+                        value: Math.PI
+                    });
+                    keyFrames.push({
+                        frame: 2,
+                        value: Math.PI/4
+                    });
+                    keyFrames.push({
+                        frame: 4,
+                        value: Math.PI/2
+                    });
+                    xSlide.setKeys(keyFrames);
+                    ficha6.animations.push(xSlide);
+                    scene.beginAnimation(ficha6, 0, 4, true);
+                })
+            )
 
             return scene;
         }
