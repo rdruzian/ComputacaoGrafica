@@ -55,7 +55,7 @@
             var scene = new BABYLON.Scene(engine);
             scene.enablePhysics()
             // new BABYLON.Vector3(2, 10, 5)
-            var camera1 = new BABYLON.ArcRotateCamera("camera1", 0, Math.PI/4, 10, new BABYLON.Vector3(8, -10, -20), scene);
+            var camera1 = new BABYLON.ArcRotateCamera("camera1", 0, Math.PI/4, 10, new BABYLON.Vector3(8, 10, -20), scene);
             scene.activeCamera = camera1;
             scene.activeCamera.attachControl(canvas, true);
 
@@ -132,6 +132,7 @@
             var tunel1 = new Tunel(null, new BABYLON.Vector3(5, 4, 0.2), new BABYLON.Vector3(0, -2, -11.6), new BABYLON.Vector3(0, 0, 0), "tunel1", wood)
             var tunel11 = new Tunel(tunel1, new BABYLON.Vector3(4, 4.4, 0.2), new BABYLON.Vector3(-1.4, -0.7, -12.6), new BABYLON.Vector3(0, Math.PI/2, 0), "tunel11", wood)
             var tunel12 = new Tunel(tunel1, new BABYLON.Vector3(4, 4.4, 0.2), new BABYLON.Vector3(1.4, -0.7, -12.6), new BABYLON.Vector3(0, Math.PI/2, 0), "tunel12", wood)
+            var tunel13 = new Tunel(tunel1, new BABYLON.Vector3(5, 4, 0.2), new BABYLON.Vector3(0, -0.5, -13.6), new BABYLON.Vector3(0, 0, 0), "tunel13", wood)
 
             // nivel 3
             var box4 = new Pista(0, -5.2, -23, 0, 0, 0, "box4", wood)
@@ -145,6 +146,8 @@
                 new BABYLON.ExecuteCodeAction({trigger: BABYLON.ActionManager.OnIntersectionEnterTrigger, parameter: initialSphere}, function () {
                     initialSphere.isVisible = false
                     secondSphere.isVisible = true
+                    secondSphere.physicsImpostor = new BABYLON.PhysicsImpostor(secondSphere, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1, restitution: 0.9 }, scene);
+                    box5.physicsImpostor = new BABYLON.PhysicsImpostor(box5, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0.1, restitution: 0.9 }, scene);
                     const zSlide = new BABYLON.Animation("zSlide", "position.z", 4, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT)
                     const keyFrames = []; 
                     keyFrames.push({
@@ -162,9 +165,8 @@
                     zSlide.setKeys(keyFrames);
                     box5.animations.push(zSlide);
                     scene.beginAnimation(box5, 0, 4, true);
-
-                    secondSphere.physicsImpostor = new BABYLON.PhysicsImpostor(secondSphere, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1, restitution: 0.9 }, scene);
-                    secondSphere.physicsImpostor.applyImpulse(new BABYLON.Vector3(0, 0, -1), secondSphere.getAbsolutePosition());
+                    box5.isVisible = false
+                    secondSphere.physicsImpostor.applyImpulse(new BABYLON.Vector3(0,0, 0), secondSphere.getAbsolutePosition());
                 })
             )      
             
@@ -200,11 +202,11 @@
             var borda15 = new Borda(box9, 9.25, -11.7, box9.position.z,"borda15", wood)
             var borda16 = new Borda(box9, 6.6, -11.7, box9.position.z,"borda16", wood)
             
-            var tunel4 = new Tunel(null, new BABYLON.Vector3(5, 6, 0.2), new BABYLON.Vector3(7.9, -11.2, -24.5), new BABYLON.Vector3(0, 0, 0), "tunel4", wood)
-            tunel4.actionManager = new BABYLON.ActionManager(scene)
-            tunel4.actionManager.registerAction(
+            var domino1 = new Tunel(null, new BABYLON.Vector3(5, 6, 0.2), new BABYLON.Vector3(7.9, -11.2, -24.5), new BABYLON.Vector3(0, 0, 0), "domino1", wood)
+            domino1.actionManager = new BABYLON.ActionManager(scene)
+            domino1.actionManager.registerAction(
                 new BABYLON.ExecuteCodeAction({trigger: BABYLON.ActionManager.OnIntersectionEnterTrigger, parameter: secondSphere}, function () {
-                    tunel4.physicsImpostor = new BABYLON.PhysicsImpostor(tunel4, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 1, restitution: 0.9 }, scene);
+                    domino1.physicsImpostor = new BABYLON.PhysicsImpostor(domino1, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 1, restitution: 0.9 }, scene);
                     const xSlide = new BABYLON.Animation("xSlide", "rotation.x", 4, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT)
                     const keyFrames = []; 
                     keyFrames.push({
@@ -220,8 +222,8 @@
                         value: Math.PI/2
                     });
                     xSlide.setKeys(keyFrames);
-                    tunel4.animations.push(xSlide);
-                    scene.beginAnimation(tunel4, 0, 4, true);
+                    domino1.animations.push(xSlide);
+                    scene.beginAnimation(domino1, 0, 4, true);
                 })
             )
 
@@ -242,7 +244,7 @@
 
             ficha1.actionManager = new BABYLON.ActionManager(scene)
             ficha1.actionManager.registerAction(
-                new BABYLON.ExecuteCodeAction({trigger: BABYLON.ActionManager.OnIntersectionEnterTrigger, parameter: tunel4}, function () {
+                new BABYLON.ExecuteCodeAction({trigger: BABYLON.ActionManager.OnIntersectionEnterTrigger, parameter: domino1}, function () {
                     ficha1.physicsImpostor = new BABYLON.PhysicsImpostor(ficha1, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 1, restitution: 0.9 }, scene);
                     const xSlide = new BABYLON.Animation("xSlide", "rotation.x", 4, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT)
                     const keyFrames = []; 
